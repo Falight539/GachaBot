@@ -1,14 +1,17 @@
 import discord
 import responses
 
+from keras.models import load_model
+
 async def send_message(message, user_message, is_private, bot):
+    global model
     try:
-        await responses.handle_respose(message, user_message, is_private, bot)
+        await responses.handle_respose(message, user_message, is_private, bot, model)
     except Exception as e:
         print(e)
 
 def run_bot():
-    TOKEN = r'MTE1Mzk2NDc5ODM4ODczMTk0NQ.GZX_Bb.Y0Ox-APkQVeDX-M7LQfi5XHzpn8tlqoOuscALg'
+    TOKEN = r'MTE1Mzk2NDc5ODM4ODczMTk0NQ.G3T0Hc.KwlcWF-T3RNjuIenNxTRW64I-jU9VuXWc8SJS0'
     intents = discord.Intents.default()
     intents.message_content = True
     client = discord.Client(intents=intents)
@@ -32,4 +35,5 @@ def run_bot():
     client.run(TOKEN)
 
 if __name__ == '__main__':
+    model = load_model(r'model.h5')
     run_bot()

@@ -1,7 +1,3 @@
-from datetime import datetime
-import time
-
-import numpy as np
 import genshinstats as gs
 import gahca_calculation as gc
 
@@ -21,10 +17,10 @@ class planer:
 
     budget = 0
     rate_up = 0
-    roll_count = 0
+    roll_count = -1
 
     def __init__(self, uid: int, ltuid: int, ltoken: str, authURL: str):
-        gs.set_cookie(account_id=ltuid, cookie_token=ltoken)
+        gs.set_cookie(ltuid=ltuid, ltoken=ltoken)
         gs.set_authkey(authURL)
         self.uid = uid
 
@@ -32,15 +28,32 @@ class planer:
         return gs.get_user_stats(self.uid)['stats']
 
     def wished(self):
-        hist = gs.get_wish_history(301)
+        if self.roll_count == -1:
+            self.roll_count = 0
+
+        hist = None
+
         try:
-            for i, d in enumerate(hist):
-                if d['type'] == 'Character':
-                    pass
+            hist = gs.get_wish_history(301)
+        except:
+            return -1
+
+        try:
+            for d in hist:
+                if d['type'] == 'Character' and d['rarity'] == 5:
+                    self.roll_count = 0
+                else:
+                    self.roll_count += 1
         except:
             pass
+        
+        return self.roll_count
+        
+    def add_rolls(self, rolls):
+        self.roll_count += rolls
 
-    def free_possible(self):
+    def free_possible(self, s, e, c: int):
+        self.start, self.end, self.current = s, e, c
         start = self.start.split('-')
         end = self.start.split('-')
         date_diff = (int(end[0]) - int(start[0])) * 365 + int((int(end[1]) - int(start[1])) * 30.41) + (int(end[2]) - int(start[2]))
@@ -72,19 +85,7 @@ class planer:
             # event
             self.current += 420
 
-        print(f"Your Possible Crystals (without purchase) is {self.current} crystals")
-
-    
-    def perfect_timing(self, cheapest):
-        crystal = int((self.budget*cheapest)/cpp)
-        print(f"Total crystals gained from budget is {crystal} crystals")
-        self.current += crystal
-        print(f"Your Crystals {self.current} crystals")
-
-        possible_pulls = int(self.current/cpr)
-        print(f"Your possible pulls is {possible_pulls}")
-
-        possible_pulls += self.roll_count
+        return self.current
 
     def simulate(self):
         gc.prob_cal(0, self.rate_up, self.roll_count)
