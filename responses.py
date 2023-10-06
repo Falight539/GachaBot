@@ -91,6 +91,9 @@ def create_str(c, n):
     return f"**`Purchase package {c} gems (included bonus), {n} package(s)`**"
         
 async def handle_respose(message, user_message, is_private, bot: discord.Client, model: Sequential) -> str:
+
+    global cheapest_c
+
     p_message = user_message.lower()
 
     def check(m):
@@ -261,7 +264,11 @@ async def handle_respose(message, user_message, is_private, bot: discord.Client,
                 index = i
                 mx = d
         
+        cheapest_c = mx
+
         msg = f'**`{str(time[index]).split(" ")[0]} is the best day to follow the bless of godness (Buy in UAH currency)`**'
+        await message.author.send(msg) if is_private else await message.channel.send(msg)
+        msg = '**`It will provide you around 1 USD per {:0.2f} UAH exchange rate`**'.format(mx)
         await message.author.send(msg) if is_private else await message.channel.send(msg)
     
     # Find best possible way to deal with this banner under the budget
@@ -278,23 +285,38 @@ async def handle_respose(message, user_message, is_private, bot: discord.Client,
         await message.author.send(msg) if is_private else await message.channel.send(msg)
         budget = await bot.wait_for('message', check=check)
 
-        wishes_budget = int(budget * cheapest_c)
+        wishes_budget = int(float(budget.content) * cheapest_c)
         crystal = 0
 
         item = [[8080, 2519], [3880, 1259], [2240, 706], [1090, 384], [330 ,125], [60 ,27]]
+        plane = []
 
         for c, p in item:
             if p > wishes_budget:
                 continue
             
-            crystal += int(wishes_budget//p) * c
+            n = int(wishes_budget//p)
+            crystal += n * c
             wishes_budget = wishes_budget%p
+            plane.append([c, n])
 
         pulls = (crystal + users[name].current)//160
 
         users[name].add_rolls(pulls)
 
-        users[name].simulate()
+        prob = users[name].simulate()
+
+        msg = "**`Here is the best way to do . . .`**"
+        message.author.send(msg) if is_private else await message.channel.send(msg)
+
+        for c, n in plane:
+            msg = create_str(c, n)
+            await message.author.send(msg) if is_private else await message.channel.send(msg)
+
+        msg = f"**`You have {prob}% chance to win this banner`**"
+        message.author.send(msg) if is_private else await message.channel.send(msg)
+
+        users.pop(name)
 
 
         

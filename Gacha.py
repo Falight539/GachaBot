@@ -40,8 +40,9 @@ class planer:
 
         try:
             for d in hist:
+                # print(d)
                 if d['type'] == 'Character' and d['rarity'] == 5:
-                    self.roll_count = 0
+                    break
                 else:
                     self.roll_count += 1
         except:
@@ -88,4 +89,4 @@ class planer:
         return self.current
 
     def simulate(self):
-        gc.prob_cal(0, self.rate_up, self.roll_count)
+        return gc.prob_cal(0, self.rate_up, self.roll_count)

@@ -79,6 +79,7 @@ def prob_cal(begin_pull: int, up_pity: int, possible_pull: int):
         ans = P_sum if j == 1 else ans
 
     print(f"Your Probability to gain atleast one Rate UP is {int(ans[possible_pull]*100)}%")
+    return int(ans[possible_pull]*100)
 
     # plt.plot(ans[possible_pull], possible_pull, marker='o', markersize=5, markerfacecolor='green')
     # plt.text(ans[possible_pull]-0.06, possible_pull, f"{possible_pull}")
