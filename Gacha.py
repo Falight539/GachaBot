@@ -1,13 +1,6 @@
 import genshinstats as gs
 import gahca_calculation as gc
 
-SSR_rate = 0.006
-cpp = 2.2
-cpr = 160
-
-predicted = [36.7, 37.2, 36.4, 36.9, 36.6, 36.8]
-predicted.sort(reverse=True)
-
 class planer:
 
     # For start function!! Input
@@ -40,7 +33,6 @@ class planer:
 
         try:
             for d in hist:
-                # print(d)
                 if d['type'] == 'Character' and d['rarity'] == 5:
                     break
                 else:

@@ -61,7 +61,7 @@ def package_cal(req: int, package: list):
                 last = False
             n = req//c
             req = req%c
-            if c == 60 and req < 60:
+            if c == 60 and req < 60 and req != 0:
                 packs.append([c, n+1])
                 total += (n+1) * p
             else:
@@ -74,7 +74,7 @@ def package_cal(req: int, package: list):
                 packs.append([c, 1])
                 total += p
                 break
-        elif req <= 60:
+        elif req <= 60 and req != 0:
             packs.append([60, 1])
             total += 27.3
             break
@@ -215,7 +215,7 @@ async def handle_respose(message, user_message, is_private, bot: discord.Client,
         msg = f"**`You need {required} more gems to obtain the next SSR character (not include free gems yet)`**"
         await message.author.send(msg) if is_private else await message.channel.send(msg)
         msg = f"**`You need {abs_req+gem} more gems for 100% winning this banner (not include free gems yet)`**"
-        await message.  author.send(msg) if is_private else await message.channel.send(msg)
+        await message.author.send(msg) if is_private else await message.channel.send(msg)
 
         ssr_plan = package_cal((required-gem), item)
         abs_plan = package_cal(abs_req, item)

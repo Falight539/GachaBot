@@ -44,7 +44,6 @@ def prob_cal(begin_pull: int, up_pity: int, possible_pull: int):
                 if j != 0:
                     M[i][j][1] += M[last_5_star][j - 1][0] * P_trans_now + 0.5 * M[last_5_star][j - 1][1] * P_trans_now
 
-    attention_pos = [0.5, 0.9, 0.99]
     for j in range(1, 8):
         P_full_constellation = M[:, j, 1]
         max_p = 0
