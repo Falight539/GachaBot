@@ -124,7 +124,13 @@ async def handle_respose(message, user_message, is_private, bot: discord.Client,
     elif p_message == '!tutorial':
 
         em = discord.Embed()
-        pass
+        em.title = "Watch this!!"
+        em.set_thumbnail(url=r'https://cdn.discordapp.com/attachments/1149591713082511424/1163131536632188938/tn.jpg?ex=653e75a8&is=652c00a8&hm=e83a2768df4430451989e6b3b4ae09eaf4ecd20cf24f904a0bd448f56cd9e30b&')
+        em.url = r'https://youtu.be/OjZtwaX2RcU'
+        em.description = "Watch this Vid to understand the goodness of god \n (also like and sub!!)"
+        em.color = 15418782
+
+        await message.author.send(embed=em) if is_private else await message.channel.send(embed=em)
 
     # Initializing user's account
     elif p_message == '!init':
