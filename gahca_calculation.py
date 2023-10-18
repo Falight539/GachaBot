@@ -1,5 +1,4 @@
 import numpy as np
-from matplotlib import pyplot as plt
 
 def prob_cal(begin_pull: int, up_pity: int, possible_pull: int):
 
@@ -11,7 +10,7 @@ def prob_cal(begin_pull: int, up_pity: int, possible_pull: int):
 
     P_trans = np.zeros(91, dtype=np.float16)
     pity_pull = 90  
-    base_P = 0.006  
+    base_P = 0.006
     change_pull = 73  
     state_P = 1
 
@@ -45,48 +44,18 @@ def prob_cal(begin_pull: int, up_pity: int, possible_pull: int):
                 if j != 0:
                     M[i][j][1] += M[last_5_star][j - 1][0] * P_trans_now + 0.5 * M[last_5_star][j - 1][1] * P_trans_now
 
-
-    # plt.figure(dpi=150, figsize=(6, 5))
-    # plt.title("Prob of getting rate up character")
-    # for i in range(0, 1301, 100):
-    #     plt.axhline(y=i, ls=":", c="lightgray")
-
     attention_pos = [0.5, 0.9, 0.99]
-    # for each_pos in attention_pos:
-    #     plt.axvline(x=each_pos, ls="--", c="lightgray")
-    #     plt.text(each_pos-0.08, 1225, str(int(each_pos*100))+"%", c='lightgray')
     for j in range(1, 8):
         P_full_constellation = M[:, j, 1]
         max_p = 0
         P_sum = np.zeros(1500, dtype=np.float16)
         Expectation = 0
-        # one = True
         for i in range(1, 1+pity_pull*2*7):
             if P_full_constellation[i] > max_p:
                 max_p = P_full_constellation[i]
             Expectation += i * P_full_constellation[i]
             P_sum[i] = P_sum[i-1] + P_full_constellation[i]
-            # for each_pos in attention_pos:
-            #     if P_sum[i] >= each_pos >= P_sum[i - 1]:
-            #         if each_pos == 0.5 and one:
-            #             plt.text(each_pos-0.06, i, str(i))
-            #             plt.text(each_pos-0.12, i, str(j),  c='#d96d62')
-            #             one = False
-            #         if each_pos == 0.99:
-            #             plt.text(each_pos-0.06, i, str(i))
-        # print("Expectation of pulling "+str(j)+" UP characters is "+str(Expectation))
-        # plt.plot(P_sum[1:1 + pity_pull * 2 * 7], range(1, 1 + pity_pull * 2 * 7), label='theory', linewidth=1.5, c='salmon')
         ans = P_sum if j == 1 else ans
 
     print(f"Your Probability to gain atleast one Rate UP is {int(ans[possible_pull]*100)}%")
     return int(ans[possible_pull]*100)
-
-    # plt.plot(ans[possible_pull], possible_pull, marker='o', markersize=5, markerfacecolor='green')
-    # plt.text(ans[possible_pull]-0.06, possible_pull, f"{possible_pull}")
-
-    # Analysis Part
-    
-
-
-    # plt.text(0.7, 30, "Balance tree", c="lightgray")
-    # plt.show()
